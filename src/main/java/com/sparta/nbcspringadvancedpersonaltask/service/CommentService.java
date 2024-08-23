@@ -7,8 +7,6 @@ import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class CommentService {
@@ -27,6 +25,12 @@ public class CommentService {
         Foundtodo.addComment(comment);
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponseDto(savedComment);
+    }
+
+    //댓글 단건 조회
+    public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long TodoId) {
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,TodoId);
+        return new CommentResponseDto(foundComment);
     }
 
 }

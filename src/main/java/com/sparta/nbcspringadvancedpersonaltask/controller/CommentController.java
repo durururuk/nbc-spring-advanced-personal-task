@@ -13,8 +13,15 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    //댓글 등록
     @PostMapping
     public CommentResponseDto createComment(@RequestParam Long id, @RequestBody CommentRequestDto requestDto) {
         return commentService.createComment(requestDto,id);
+    }
+
+    @GetMapping
+    //댓글 단건 조회
+    public CommentResponseDto readCommentByCommentIdAndTodoId(@RequestParam Long commentId, @RequestParam Long todoId) {
+        return commentService.readCommentByIdAndTodoId(commentId, todoId);
     }
 }
