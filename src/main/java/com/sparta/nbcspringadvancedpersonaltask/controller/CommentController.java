@@ -39,5 +39,11 @@ public class CommentController {
         return commentService.updateCommentByIdAndTodoId(commentId,todoId,requestDto);
     }
 
+    //댓글 삭제
+    @DeleteMapping
+    public CommentResponseDto deleteCommentByIdAndTodoId(@RequestParam Long commentId, @RequestParam Long todoId) {
+        return commentService.deleteCommentByIdAndTodoId(commentId,todoId);
+    }
+
 
 }

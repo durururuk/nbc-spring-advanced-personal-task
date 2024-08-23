@@ -28,13 +28,13 @@ public class CommentService {
         Todo Foundtodo = todoRepository.findById(id).orElseThrow();
         Foundtodo.addComment(comment);
         Comment savedComment = commentRepository.save(comment);
-        return new CommentResponseDto(savedComment);
+        return new CommentResponseDto(savedComment, "등록 완료");
     }
 
     //댓글 단건 조회
     public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
-        return new CommentResponseDto(foundComment);
+        return new CommentResponseDto(foundComment, "조회 성공");
     }
 
     //댓글 전체 조회
@@ -42,7 +42,7 @@ public class CommentService {
         List<CommentResponseDto> responseDtos = new ArrayList<>();
         List<Comment> comments = commentRepository.findAllByTodoId(todoId);
         for(Comment comment : comments) {
-            responseDtos.add(new CommentResponseDto(comment));
+            responseDtos.add(new CommentResponseDto(comment, "조회 성공"));
         }
         return responseDtos;
     }
@@ -55,7 +55,14 @@ public class CommentService {
         if(requestDto.getCommentContents()!=null) {foundComment.setCommentContents(requestDto.getCommentContents());}
 
         Comment updatedComment = commentRepository.save(foundComment);
-        return new CommentResponseDto(updatedComment);
+        return new CommentResponseDto(updatedComment , "수정 완료");
+    }
+
+    //댓글 삭제
+    public CommentResponseDto deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
+        commentRepository.delete(foundComment);
+        return new CommentResponseDto(foundComment , "삭제 완료");
     }
 
 }
