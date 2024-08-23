@@ -19,4 +19,10 @@ public class TodoService {
         Todo savedTodo = todorepository.save(todo);
         return new TodoResponseDto(savedTodo);
     }
+
+    //일정 단건 조회
+    public TodoResponseDto readTodoById(Long id) {
+        Todo FoundTodo = todorepository.findById(id).orElseThrow();
+        return new TodoResponseDto(FoundTodo);
+    }
 }
