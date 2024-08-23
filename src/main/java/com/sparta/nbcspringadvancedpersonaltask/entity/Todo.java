@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -23,6 +26,16 @@ public class Todo extends Timestamped{
         this.username = requestDto.getUsername();
         this.todoTitle = requestDto.getTodoTitle();
         this.todoContents = requestDto.getTodoContents();
+    }
+
+    @OneToMany(mappedBy = "todo")
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        if(comment.getTodo() != this) {
+            comment.setTodo(this);
+        }
     }
 
 }
