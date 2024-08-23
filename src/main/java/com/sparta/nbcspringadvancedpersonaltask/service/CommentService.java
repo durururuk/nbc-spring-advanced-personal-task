@@ -8,6 +8,9 @@ import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -28,9 +31,19 @@ public class CommentService {
     }
 
     //댓글 단건 조회
-    public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long TodoId) {
-        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,TodoId);
+    public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
         return new CommentResponseDto(foundComment);
+    }
+
+    //댓글 전체 조회
+    public List<CommentResponseDto> readAllCommentByTodoId(Long todoId) {
+        List<CommentResponseDto> responseDtos = new ArrayList<>();
+        List<Comment> comments = commentRepository.findAllByTodoId(todoId);
+        for(Comment comment : comments) {
+            responseDtos.add(new CommentResponseDto(comment));
+        }
+        return responseDtos;
     }
 
 }

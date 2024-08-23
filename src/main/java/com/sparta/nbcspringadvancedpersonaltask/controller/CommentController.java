@@ -5,6 +5,8 @@ import com.sparta.nbcspringadvancedpersonaltask.dto.CommentResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.service.CommentService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/comment")
 public class CommentController {
@@ -19,9 +21,16 @@ public class CommentController {
         return commentService.createComment(requestDto,id);
     }
 
-    @GetMapping
+    @GetMapping("/readById")
     //댓글 단건 조회
     public CommentResponseDto readCommentByCommentIdAndTodoId(@RequestParam Long commentId, @RequestParam Long todoId) {
         return commentService.readCommentByIdAndTodoId(commentId, todoId);
     }
+
+    @GetMapping
+    public List<CommentResponseDto> readAllCommentByTodoId(@RequestParam Long todoId) {
+        return commentService.readAllCommentByTodoId(todoId);
+    }
+
+
 }
