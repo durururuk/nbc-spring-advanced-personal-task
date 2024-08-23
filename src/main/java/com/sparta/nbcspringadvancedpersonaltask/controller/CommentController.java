@@ -27,9 +27,16 @@ public class CommentController {
         return commentService.readCommentByIdAndTodoId(commentId, todoId);
     }
 
+    //댓글 전체 조회
     @GetMapping
     public List<CommentResponseDto> readAllCommentByTodoId(@RequestParam Long todoId) {
         return commentService.readAllCommentByTodoId(todoId);
+    }
+
+    //댓글 수정
+    @PutMapping
+    public CommentResponseDto updateCommentByIdAndTodoId(@RequestParam Long commentId, @RequestParam Long todoId, @RequestBody CommentRequestDto requestDto) {
+        return commentService.updateCommentByIdAndTodoId(commentId,todoId,requestDto);
     }
 
 

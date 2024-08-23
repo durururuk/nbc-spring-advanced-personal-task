@@ -2,6 +2,7 @@ package com.sparta.nbcspringadvancedpersonaltask.service;
 
 import com.sparta.nbcspringadvancedpersonaltask.dto.CommentRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.CommentResponseDto;
+import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Comment;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
@@ -44,6 +45,17 @@ public class CommentService {
             responseDtos.add(new CommentResponseDto(comment));
         }
         return responseDtos;
+    }
+
+    //댓글 수정
+    public CommentResponseDto updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
+
+        if(requestDto.getUsername() != null) {foundComment.setUsername(requestDto.getUsername());}
+        if(requestDto.getCommentContents()!=null) {foundComment.setCommentContents(requestDto.getCommentContents());}
+
+        Comment updatedComment = commentRepository.save(foundComment);
+        return new CommentResponseDto(updatedComment);
     }
 
 }

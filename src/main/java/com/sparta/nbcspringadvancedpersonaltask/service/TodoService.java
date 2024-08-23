@@ -27,7 +27,7 @@ public class TodoService {
         return new TodoResponseDto(FoundTodo);
     }
 
-    //일정 단건 수정
+    //일정 수정
     @Transactional
     public TodoResponseDto updateTodoViaId(TodoRequestDto requestDto, Long id) {
         Todo foundTodo = todorepository.findById(id).orElseThrow();
