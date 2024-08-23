@@ -1,9 +1,11 @@
 package com.sparta.nbcspringadvancedpersonaltask.dto;
 
 import com.sparta.nbcspringadvancedpersonaltask.entity.Comment;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class CommentResponseDto {
     private final String username;
     private final String commentContents;
