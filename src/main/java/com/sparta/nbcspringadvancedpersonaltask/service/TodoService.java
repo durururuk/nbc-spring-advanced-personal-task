@@ -5,6 +5,7 @@ import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TodoService {
@@ -24,5 +25,18 @@ public class TodoService {
     public TodoResponseDto readTodoById(Long id) {
         Todo FoundTodo = todorepository.findById(id).orElseThrow();
         return new TodoResponseDto(FoundTodo);
+    }
+
+    //일정 단건 수정
+    @Transactional
+    public TodoResponseDto updateTodoViaId(TodoRequestDto requestDto, Long id) {
+        Todo foundTodo = todorepository.findById(id).orElseThrow();
+
+        if(requestDto.getUsername() != null) {foundTodo.setUsername(requestDto.getUsername());}
+        if(requestDto.getTodoTitle() !=null) {foundTodo.setTodoTitle(requestDto.getTodoTitle());}
+        if(requestDto.getTodoContents()!=null) {foundTodo.setTodoContents(requestDto.getTodoContents());}
+
+        Todo savedTodo = todorepository.save(foundTodo);
+        return new TodoResponseDto(savedTodo);
     }
 }

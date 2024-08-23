@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/todo")
 public class TodoController {
-    private TodoService todoService;
+    private final TodoService todoService;
 
     @Autowired
     public TodoController(TodoService todoService) {
@@ -27,5 +27,12 @@ public class TodoController {
     public TodoResponseDto readTodoById(@RequestParam Long id) {
         return todoService.readTodoById(id);
     }
+
+    //일정 수정
+    @PutMapping
+    public TodoResponseDto updateTodo(@RequestParam Long id, @RequestBody TodoRequestDto todoRequestDto) {
+        return todoService.updateTodoViaId(todoRequestDto, id);
+    }
+
 
 }

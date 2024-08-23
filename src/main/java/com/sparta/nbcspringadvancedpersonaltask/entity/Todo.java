@@ -4,8 +4,10 @@ import com.sparta.nbcspringadvancedpersonaltask.dto.TodoRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 public class Todo extends Timestamped{
