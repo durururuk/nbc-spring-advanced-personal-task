@@ -4,6 +4,10 @@ import com.sparta.nbcspringadvancedpersonaltask.dto.TodoRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +42,15 @@ public class TodoService {
 
         Todo savedTodo = todorepository.save(foundTodo);
         return new TodoResponseDto(savedTodo);
+    }
+
+    //일정 전체 조회
+    public Page<TodoResponseDto> readAllTodo(Pageable pageable) {
+        int page = (pageable != null && pageable.getPageNumber() >= 0) ? pageable.getPageNumber() : 0;
+        int size = (pageable != null && pageable.getPageSize() > 0) ? pageable.getPageSize() : 10;
+        Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
+
+        Pageable sortedPageable = PageRequest.of(page,size,sort);
+        return todorepository.findAll(sortedPageable).map(TodoResponseDto::new);
     }
 }
