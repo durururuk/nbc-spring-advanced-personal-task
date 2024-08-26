@@ -28,7 +28,7 @@ public class Todo extends Timestamped{
         this.todoContents = requestDto.getTodoContents();
     }
 
-    @OneToMany(mappedBy = "todo")
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     public void addComment(Comment comment) {
