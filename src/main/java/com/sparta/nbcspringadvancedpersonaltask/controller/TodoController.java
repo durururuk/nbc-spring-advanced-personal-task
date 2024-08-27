@@ -25,6 +25,13 @@ public class TodoController {
         return todoService.createTodo(requestDto);
     }
 
+    //일정 담당자 추가
+    @PutMapping("/add")
+    public void addUser(@RequestParam Long todoId, @RequestParam Long userId) {
+        todoService.AddUser(userId, todoId);
+    }
+
+
     //일정 단건 조회
     @GetMapping("/readById")
     public TodoResponseDto readTodoById(@RequestParam Long id) {

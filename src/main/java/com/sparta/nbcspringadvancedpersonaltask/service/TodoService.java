@@ -39,6 +39,16 @@ public class TodoService {
         return new TodoResponseDto(savedTodo);
     }
 
+    //일정 담당 유저 추가
+    public void AddUser(Long userId, Long todoId) {
+        UserTodo userTodo = new UserTodo();
+        User user = userRepository.findById(userId).orElseThrow();
+        Todo todo = todorepository.findById(todoId).orElseThrow();
+        userTodo.setTodo(todo);
+        userTodo.setUser(user);
+        userTodoRepository.save(userTodo);
+    }
+
     //일정 단건 조회
     public TodoResponseDto readTodoById(Long id) {
         Todo FoundTodo = todorepository.findById(id).orElseThrow();
