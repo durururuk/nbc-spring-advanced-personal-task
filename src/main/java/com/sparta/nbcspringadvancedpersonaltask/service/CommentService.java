@@ -2,7 +2,6 @@ package com.sparta.nbcspringadvancedpersonaltask.service;
 
 import com.sparta.nbcspringadvancedpersonaltask.dto.CommentRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.CommentResponseDto;
-import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Comment;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
@@ -10,7 +9,6 @@ import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
