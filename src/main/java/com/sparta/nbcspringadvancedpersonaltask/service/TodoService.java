@@ -62,11 +62,11 @@ public class TodoService {
         List<User> userList = userTodoList.stream()
                 .map(UserTodo::getUser)
                 .toList();
-        List<UserSimpleResponseDto> userSimpleResponseDtoList = userList.stream()
-                .map(UserSimpleResponseDto::new)
+        List<UserWithoutDateResponseDto> userWithoutDateResponseDtoList = userList.stream()
+                .map(UserWithoutDateResponseDto::new)
                 .toList();
 
-        return new TodoWithUsersResponseDto(todoResponseDto,userSimpleResponseDtoList);
+        return new TodoWithUsersResponseDto(todoResponseDto, userWithoutDateResponseDtoList);
     }
 
     //일정 수정

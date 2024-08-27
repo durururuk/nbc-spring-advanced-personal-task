@@ -23,7 +23,12 @@ public class CommentService {
         this.todoRepository = todoRepository;
     }
 
-    //댓글 작성
+    /**
+     * 댓글 작성
+     * @param requestDto 댓글 요청 Dto
+     * @param id 댓글이 달릴 일정 Id
+     * @return 작성된 댓글 응답 Dto
+     */
     @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, Long id) {
         Comment comment = new Comment(requestDto);
@@ -33,25 +38,36 @@ public class CommentService {
         return new CommentResponseDto(savedComment, "등록 완료");
     }
 
-    //댓글 단건 조회
+    /**
+     * 댓글 단건 조회
+     * @param commentId 조회할 댓글 Id
+     * @param todoId 조회할 댓글이 있는 원 일정 Id
+     * @return 조회된 댓글 응답 Dto
+     */
     @Transactional
     public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
         return new CommentResponseDto(foundComment, "조회 성공");
     }
 
-    //댓글 전체 조회
+    /**
+     * 댓글 전체 조회
+     * @param todoId 댓글을 조회할 원 일정 Id
+     * @return 댓글 리스트 응답 Dto
+     */
     @Transactional
     public List<CommentResponseDto> readAllCommentByTodoId(Long todoId) {
-        List<CommentResponseDto> responseDtos = new ArrayList<>();
         List<Comment> comments = commentRepository.findAllByTodoId(todoId);
-        for(Comment comment : comments) {
-            responseDtos.add(new CommentResponseDto(comment, "조회 성공"));
-        }
-        return responseDtos;
+        return comments.stream().map(CommentResponseDto::new).toList();
     }
 
-    //댓글 수정
+    /**
+     * 댓글 수정 : 작성자명, 수정할 내용이 모두 들어있지 않아도 동작하게
+     * @param commentId 수정할 댓글 Id
+     * @param todoId 수정할 댓글이 있는 원 일정 Id
+     * @param requestDto 수정할 내용 요청 Dto
+     * @return 수정된 내용 응답 Dto
+     */
     @Transactional
     public CommentResponseDto updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
@@ -63,7 +79,12 @@ public class CommentService {
         return new CommentResponseDto(updatedComment , "수정 완료");
     }
 
-    //댓글 삭제
+    /**
+     * 댓글 삭제
+     * @param commentId 삭제할 댓글 Id
+     * @param todoId : 삭제할 댓글이 있는 원 일정 Id
+     * @return : 삭제된 내용 응답 Dto
+     */
     @Transactional
     public CommentResponseDto deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
