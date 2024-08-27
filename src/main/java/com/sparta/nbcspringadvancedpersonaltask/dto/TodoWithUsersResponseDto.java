@@ -9,10 +9,10 @@ import java.util.List;
 @Setter
 public class TodoWithUsersResponseDto {
     private TodoResponseDto todoResponseDto;
-    private List<UserSimpleResponseDto> userSimpleResponseDtoList;
+    private List<UserWithoutDateResponseDto> userWithoutDateResponseDtoList;
 
-    public TodoWithUsersResponseDto(TodoResponseDto todoResponseDto, List<UserSimpleResponseDto> userSimpleResponseDtoList) {
+    public TodoWithUsersResponseDto(TodoResponseDto todoResponseDto, List<UserWithoutDateResponseDto> userWithoutDateResponseDtoList) {
         this.todoResponseDto = todoResponseDto;
-        this.userSimpleResponseDtoList = userSimpleResponseDtoList;
+        this.userWithoutDateResponseDtoList = userWithoutDateResponseDtoList;
     }
 }
