@@ -28,7 +28,7 @@ public class Todo extends Timestamped{
         this.userId = requestDto.getUserId();
     }
 
-    @OneToMany(mappedBy = "todo")
+    @OneToMany(mappedBy = "todo" , cascade = CascadeType.REMOVE)
     private List<UserTodo> UserTodoList = new ArrayList<>();
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)

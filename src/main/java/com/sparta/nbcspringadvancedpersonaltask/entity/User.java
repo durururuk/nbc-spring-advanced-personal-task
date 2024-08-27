@@ -26,7 +26,7 @@ public class User extends Timestamped {
         this.email = requestDto.getEmail();
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserTodo> UserTodoList = new ArrayList<>();
 
 }

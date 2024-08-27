@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class TodoResponseDto {
+    private final Long id;
     private final String todoTitle;
     private final String todoContents;
     private final LocalDateTime createdAt;
@@ -17,5 +18,6 @@ public class TodoResponseDto {
         this.todoContents = todo.getTodoContents();
         this.createdAt = todo.getCreatedAt();
         this.modifiedAt = todo.getModifiedAt();
+        this.id = todo.getId();
     }
 }
