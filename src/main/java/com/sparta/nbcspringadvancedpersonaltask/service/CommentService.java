@@ -8,6 +8,7 @@ import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class CommentService {
     }
 
     //댓글 작성
+    @Transactional
     public CommentResponseDto createComment(CommentRequestDto requestDto, Long id) {
         Comment comment = new Comment(requestDto);
         Todo Foundtodo = todoRepository.findById(id).orElseThrow();
@@ -32,12 +34,14 @@ public class CommentService {
     }
 
     //댓글 단건 조회
+    @Transactional
     public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
         return new CommentResponseDto(foundComment, "조회 성공");
     }
 
     //댓글 전체 조회
+    @Transactional
     public List<CommentResponseDto> readAllCommentByTodoId(Long todoId) {
         List<CommentResponseDto> responseDtos = new ArrayList<>();
         List<Comment> comments = commentRepository.findAllByTodoId(todoId);
@@ -48,6 +52,7 @@ public class CommentService {
     }
 
     //댓글 수정
+    @Transactional
     public CommentResponseDto updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
 
@@ -59,6 +64,7 @@ public class CommentService {
     }
 
     //댓글 삭제
+    @Transactional
     public CommentResponseDto deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
         commentRepository.delete(foundComment);

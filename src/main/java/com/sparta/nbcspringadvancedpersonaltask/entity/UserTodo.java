@@ -14,11 +14,11 @@ public class UserTodo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long UTId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TODO_ID")
     Todo todo;
 }

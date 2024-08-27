@@ -41,7 +41,7 @@ class NbcSpringAdvancedPersonalTaskApplicationTests {
         when(todoRepository.save(any(Todo.class))).thenReturn(todo);
 
         // when
-        TodoResponseDto responseDto = todoService.createTodo(requestDto);
+        TodoResponseDto responseDto = todoService.create(requestDto);
 
         // then
         assertThat(responseDto).isNotNull();
@@ -90,7 +90,7 @@ class NbcSpringAdvancedPersonalTaskApplicationTests {
         when(todoRepository.save(any(Todo.class))).thenReturn(existingTodo);
 
         // when
-        TodoResponseDto responseDto = todoService.updateTodoViaId(requestDto, id);
+        TodoResponseDto responseDto = todoService.update(requestDto, id);
 
         // then
         assertThat(responseDto).isNotNull();

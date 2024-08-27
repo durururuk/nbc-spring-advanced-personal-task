@@ -23,7 +23,7 @@ public class Comment extends Timestamped{
         this.commentContents = requestDto.getCommentContents();
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TODO_ID")
     private Todo todo;
 
