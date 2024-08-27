@@ -36,7 +36,6 @@ public class TodoService {
     public TodoResponseDto updateTodoViaId(TodoRequestDto requestDto, Long id) {
         Todo foundTodo = todorepository.findById(id).orElseThrow();
 
-        if(requestDto.getUsername() != null) {foundTodo.setUsername(requestDto.getUsername());}
         if(requestDto.getTodoTitle() !=null) {foundTodo.setTodoTitle(requestDto.getTodoTitle());}
         if(requestDto.getTodoContents()!=null) {foundTodo.setTodoContents(requestDto.getTodoContents());}
 

@@ -18,12 +18,10 @@ public class Todo extends Timestamped{
     @Column(name = "TODO_ID")
     private Long id;
 
-    private String username;
     private String todoTitle;
     private String todoContents;
 
     public Todo(TodoRequestDto requestDto) {
-        this.username = requestDto.getUsername();
         this.todoTitle = requestDto.getTodoTitle();
         this.todoContents = requestDto.getTodoContents();
     }
