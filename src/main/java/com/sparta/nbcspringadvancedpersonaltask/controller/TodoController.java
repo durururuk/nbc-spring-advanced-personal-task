@@ -2,7 +2,7 @@ package com.sparta.nbcspringadvancedpersonaltask.controller;
 
 import com.sparta.nbcspringadvancedpersonaltask.dto.TodoRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
-import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
+import com.sparta.nbcspringadvancedpersonaltask.repository.UserRepository;
 import com.sparta.nbcspringadvancedpersonaltask.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TodoRequestDto {
-    private String username;
     private String todoTitle;
     private String todoContents;
+    private Long userId;
 }

@@ -18,13 +18,18 @@ public class Todo extends Timestamped{
     @Column(name = "TODO_ID")
     private Long id;
 
+    private Long userId;
     private String todoTitle;
     private String todoContents;
 
     public Todo(TodoRequestDto requestDto) {
         this.todoTitle = requestDto.getTodoTitle();
         this.todoContents = requestDto.getTodoContents();
+        this.userId = requestDto.getUserId();
     }
+
+    @OneToMany(mappedBy = "todo")
+    private List<UserTodo> UserTodoList = new ArrayList<>();
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();

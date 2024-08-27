@@ -3,7 +3,11 @@ package com.sparta.nbcspringadvancedpersonaltask.service;
 import com.sparta.nbcspringadvancedpersonaltask.dto.TodoRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.TodoResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
+import com.sparta.nbcspringadvancedpersonaltask.entity.User;
+import com.sparta.nbcspringadvancedpersonaltask.entity.UserTodo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
+import com.sparta.nbcspringadvancedpersonaltask.repository.UserRepository;
+import com.sparta.nbcspringadvancedpersonaltask.repository.UserTodoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +18,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TodoService {
     private final TodoRepository todorepository;
-    public TodoService(TodoRepository todoRepository) {
+    private final UserRepository userRepository;
+    private final UserTodoRepository userTodoRepository;
+
+    public TodoService(TodoRepository todoRepository, UserRepository userRepository, UserTodoRepository userTodoRepository) {
         this.todorepository = todoRepository;
+        this.userRepository = userRepository;
+        this.userTodoRepository = userTodoRepository;
     }
 
     //일정 생성
     public TodoResponseDto createTodo(TodoRequestDto requestDto) {
+        UserTodo userTodo = new UserTodo();
         Todo todo = new Todo(requestDto);
         Todo savedTodo = todorepository.save(todo);
+        User user = userRepository.findById(todo.getUserId()).orElseThrow();
+        userTodo.setTodo(todo);
+        userTodo.setUser(user);
+        userTodoRepository.save(userTodo);
         return new TodoResponseDto(savedTodo);
     }
 

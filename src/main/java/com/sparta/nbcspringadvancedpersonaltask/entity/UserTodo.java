@@ -1,19 +1,18 @@
 package com.sparta.nbcspringadvancedpersonaltask.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 @Table(name = "USER_TODO")
 @Entity
+@Getter
 @Setter
 @NoArgsConstructor
 public class UserTodo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UT_ID")
-    private Long Id;
+    private Long UTId;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -22,7 +21,4 @@ public class UserTodo {
     @ManyToOne
     @JoinColumn(name = "TODO_ID")
     Todo todo;
-
-
-
 }
