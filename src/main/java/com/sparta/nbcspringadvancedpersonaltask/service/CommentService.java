@@ -25,8 +25,9 @@ public class CommentService {
 
     /**
      * 댓글 작성
+     *
      * @param requestDto 댓글 요청 Dto
-     * @param id 댓글이 달릴 일정 Id
+     * @param id         댓글이 달릴 일정 Id
      * @return 작성된 댓글 응답 Dto
      */
     @Transactional
@@ -40,18 +41,20 @@ public class CommentService {
 
     /**
      * 댓글 단건 조회
+     *
      * @param commentId 조회할 댓글 Id
-     * @param todoId 조회할 댓글이 있는 원 일정 Id
+     * @param todoId    조회할 댓글이 있는 원 일정 Id
      * @return 조회된 댓글 응답 Dto
      */
     @Transactional
     public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
-        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
         return new CommentResponseDto(foundComment, "조회 성공");
     }
 
     /**
      * 댓글 전체 조회
+     *
      * @param todoId 댓글을 조회할 원 일정 Id
      * @return 댓글 리스트 응답 Dto
      */
@@ -63,33 +66,39 @@ public class CommentService {
 
     /**
      * 댓글 수정 : 작성자명, 수정할 내용이 모두 들어있지 않아도 동작하게
-     * @param commentId 수정할 댓글 Id
-     * @param todoId 수정할 댓글이 있는 원 일정 Id
+     *
+     * @param commentId  수정할 댓글 Id
+     * @param todoId     수정할 댓글이 있는 원 일정 Id
      * @param requestDto 수정할 내용 요청 Dto
      * @return 수정된 내용 응답 Dto
      */
     @Transactional
     public CommentResponseDto updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
-        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
 
-        if(requestDto.getUsername() != null) {foundComment.setUsername(requestDto.getUsername());}
-        if(requestDto.getCommentContents()!=null) {foundComment.setCommentContents(requestDto.getCommentContents());}
+        if (requestDto.getUsername() != null) {
+            foundComment.setUsername(requestDto.getUsername());
+        }
+        if (requestDto.getCommentContents() != null) {
+            foundComment.setCommentContents(requestDto.getCommentContents());
+        }
 
         Comment updatedComment = commentRepository.save(foundComment);
-        return new CommentResponseDto(updatedComment , "수정 완료");
+        return new CommentResponseDto(updatedComment, "수정 완료");
     }
 
     /**
      * 댓글 삭제
+     *
      * @param commentId 삭제할 댓글 Id
-     * @param todoId : 삭제할 댓글이 있는 원 일정 Id
+     * @param todoId    : 삭제할 댓글이 있는 원 일정 Id
      * @return : 삭제된 내용 응답 Dto
      */
     @Transactional
     public CommentResponseDto deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
-        Comment foundComment = commentRepository.findByIdAndTodoId(commentId,todoId);
+        Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
         commentRepository.delete(foundComment);
-        return new CommentResponseDto(foundComment , "삭제 완료");
+        return new CommentResponseDto(foundComment, "삭제 완료");
     }
 
 }
