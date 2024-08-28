@@ -1,5 +1,6 @@
 package com.sparta.nbcspringadvancedpersonaltask.service;
 
+import com.sparta.nbcspringadvancedpersonaltask.config.PasswordEncoder;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.User;
@@ -13,10 +14,13 @@ import java.util.List;
 
 @Service
 public class UserService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -28,6 +32,7 @@ public class UserService {
     @Transactional
     public UserResponseDto create(@RequestBody UserRequestDto requestDto) {
         User user = new User(requestDto);
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
         return new UserResponseDto(user, "등록 성공");
     }
@@ -67,4 +72,6 @@ public class UserService {
         userRepository.deleteById(id);
         return new UserResponseDto(user, "삭제 완료");
     }
+
+
 }
