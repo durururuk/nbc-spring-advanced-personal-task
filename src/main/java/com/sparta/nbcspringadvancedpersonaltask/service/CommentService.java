@@ -6,6 +6,7 @@ import com.sparta.nbcspringadvancedpersonaltask.entity.Comment;
 import com.sparta.nbcspringadvancedpersonaltask.entity.Todo;
 import com.sparta.nbcspringadvancedpersonaltask.repository.CommentRepository;
 import com.sparta.nbcspringadvancedpersonaltask.repository.TodoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +30,12 @@ public class CommentService {
      * @return 작성된 댓글 응답 Dto
      */
     @Transactional
-    public CommentResponseDto createComment(CommentRequestDto requestDto, Long id) {
+    public ResponseEntity<CommentResponseDto> createComment(CommentRequestDto requestDto, Long id) {
         Comment comment = new Comment(requestDto);
         Todo Foundtodo = todoRepository.findById(id).orElseThrow();
         Foundtodo.addComment(comment);
         Comment savedComment = commentRepository.save(comment);
-        return new CommentResponseDto(savedComment, "등록 완료");
+        return ResponseEntity.ok(new CommentResponseDto(savedComment, "등록 완료"));
     }
 
     /**
@@ -45,9 +46,9 @@ public class CommentService {
      * @return 조회된 댓글 응답 Dto
      */
     @Transactional
-    public CommentResponseDto readCommentByIdAndTodoId(Long commentId, Long todoId) {
+    public ResponseEntity<CommentResponseDto> readCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
-        return new CommentResponseDto(foundComment, "조회 성공");
+        return ResponseEntity.ok(new CommentResponseDto(foundComment, "조회 성공"));
     }
 
     /**
@@ -57,9 +58,9 @@ public class CommentService {
      * @return 댓글 리스트 응답 Dto
      */
     @Transactional
-    public List<CommentResponseDto> readAllCommentByTodoId(Long todoId) {
+    public ResponseEntity<List<CommentResponseDto>> readAllCommentByTodoId(Long todoId) {
         List<Comment> comments = commentRepository.findAllByTodoId(todoId);
-        return comments.stream().map(CommentResponseDto::new).toList();
+        return ResponseEntity.ok(comments.stream().map(CommentResponseDto::new).toList());
     }
 
     /**
@@ -71,7 +72,7 @@ public class CommentService {
      * @return 수정된 내용 응답 Dto
      */
     @Transactional
-    public CommentResponseDto updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
+    public ResponseEntity<CommentResponseDto> updateCommentByIdAndTodoId(Long commentId, Long todoId, CommentRequestDto requestDto) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
 
         if (requestDto.getUsername() != null) {
@@ -82,7 +83,7 @@ public class CommentService {
         }
 
         Comment updatedComment = commentRepository.save(foundComment);
-        return new CommentResponseDto(updatedComment, "수정 완료");
+        return ResponseEntity.ok(new CommentResponseDto(updatedComment, "수정 완료"));
     }
 
     /**
@@ -93,10 +94,9 @@ public class CommentService {
      * @return : 삭제된 내용 응답 Dto
      */
     @Transactional
-    public CommentResponseDto deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
+    public ResponseEntity<CommentResponseDto> deleteCommentByIdAndTodoId(Long commentId, Long todoId) {
         Comment foundComment = commentRepository.findByIdAndTodoId(commentId, todoId);
         commentRepository.delete(foundComment);
-        return new CommentResponseDto(foundComment, "삭제 완료");
+        return ResponseEntity.ok(new CommentResponseDto(foundComment, "삭제 완료"));
     }
-
 }

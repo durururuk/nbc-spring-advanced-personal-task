@@ -20,28 +20,12 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @GetMapping("/get-jwt")
-    public String getJwt(@CookieValue(JwtTokenProvider.AUTHORIZATION_HEADER) String tokenValue) {
-        // JWT 토큰 substring
-        String token = jwtTokenProvider.substringToken(tokenValue);
-
-        // 토큰 검증
-        if(!jwtTokenProvider.validateToken(token)) {
-            throw new IllegalArgumentException("Token Error");
-        }
-
-        //토큰에서 사용자 정보 가져오기
-        Claims info = jwtTokenProvider.getUserInfoFromToken(token);
-        //사용자 email
-        String email = info.getSubject();
-        System.out.println("email = " + email);
-        //사용자 권한
-        String authority = (String) info.get(jwtTokenProvider.AUTHORIZATION_KEY);
-        System.out.println("authority = " + authority);
-
-        return "getJwt :" + email + ", " + authority;
-    }
-
+    /**
+     *
+     * @param requestDto
+     * @param res
+     * @return
+     */
     @PostMapping("/regi")
     public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
         return userService.create(requestDto, res);
