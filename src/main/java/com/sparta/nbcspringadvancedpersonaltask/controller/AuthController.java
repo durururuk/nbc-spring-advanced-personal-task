@@ -1,30 +1,24 @@
 package com.sparta.nbcspringadvancedpersonaltask.controller;
 
+import com.sparta.nbcspringadvancedpersonaltask.dto.LoginRequestDto;
+import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
+import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.UserRoleEnum;
 import com.sparta.nbcspringadvancedpersonaltask.jwt.JwtTokenProvider;
+import com.sparta.nbcspringadvancedpersonaltask.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+    private final UserService userService;
     JwtTokenProvider jwtTokenProvider;
-    public AuthController (JwtTokenProvider jwtTokenProvider) {
+    public AuthController (JwtTokenProvider jwtTokenProvider, UserService userService) {
         this.jwtTokenProvider = jwtTokenProvider;
-    }
-
-    @GetMapping("/create-jwt")
-    public String createJwt(HttpServletResponse res) {
-        //Jwt 생성
-        String token  = jwtTokenProvider.createToken("abcd1234@gmail.com", UserRoleEnum.USER);
-
-        //Jwt 쿠키 저장
-        jwtTokenProvider.addJwtToCookie(token,res);
-        return "createJwt : " + token;
+        this.userService = userService;
     }
 
     @GetMapping("/get-jwt")
@@ -47,5 +41,10 @@ public class AuthController {
         System.out.println("authority = " + authority);
 
         return "getJwt :" + email + ", " + authority;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
+        return userService.login(requestDto,res);
     }
 }
