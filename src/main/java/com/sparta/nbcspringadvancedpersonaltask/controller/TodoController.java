@@ -44,13 +44,13 @@ public class TodoController {
     }
 
     //일정 수정
-    @PutMapping
+    @PutMapping("/admin")
     public TodoResponseDto update(@RequestParam Long id, @RequestBody TodoRequestDto todoRequestDto) {
         return todoService.update(todoRequestDto, id);
     }
 
     //일정 삭제
-    @DeleteMapping
+    @DeleteMapping("/admin")
     public TodoResponseDto delete(@RequestParam Long id) {
         return todoService.delete(id);
     }

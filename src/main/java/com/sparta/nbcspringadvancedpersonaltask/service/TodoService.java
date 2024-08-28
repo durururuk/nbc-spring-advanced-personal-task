@@ -102,7 +102,6 @@ public class TodoService {
     @Transactional
     public TodoResponseDto update(TodoRequestDto requestDto, Long id) {
         Todo foundTodo = todoRepository.findById(id).orElseThrow();
-
         if (requestDto.getTodoTitle() != null) {
             foundTodo.setTodoTitle(requestDto.getTodoTitle());
         }

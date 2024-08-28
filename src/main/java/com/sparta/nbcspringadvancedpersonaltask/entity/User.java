@@ -22,11 +22,13 @@ public class User extends Timestamped {
     private String username;
     private String email;
     private String password;
+    private UserRoleEnum role;
 
     public User(UserRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
+        this.role = requestDto.getRole();
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

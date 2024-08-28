@@ -1,6 +1,7 @@
 package com.sparta.nbcspringadvancedpersonaltask.filter;
 
 import com.sparta.nbcspringadvancedpersonaltask.entity.User;
+import com.sparta.nbcspringadvancedpersonaltask.entity.UserRoleEnum;
 import com.sparta.nbcspringadvancedpersonaltask.jwt.JwtTokenProvider;
 import com.sparta.nbcspringadvancedpersonaltask.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -58,6 +59,14 @@ public class AuthFilter implements Filter {
                 User user = userRepository.findByEmail(info.getSubject()).orElse(null);
                 if (user == null) {
                     httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+
+                if (url.startsWith("/api/todo/admin")&& user != null) {
+                    if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+                        httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        httpServletResponse.getWriter().write("Access Denied");
+                        return;
+                    }
                 }
 
                 request.setAttribute("user", user);

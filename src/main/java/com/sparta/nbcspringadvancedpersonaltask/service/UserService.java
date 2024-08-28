@@ -45,7 +45,11 @@ public class UserService {
         userRepository.save(user);
 
         // Jwt 토큰 생성
+        if(user.getRole().equals(UserRoleEnum.Authority.ADMIN)) {
+            String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.ADMIN);
+        }
         String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
+
 
         // Jwt를 쿠키에 포함
         jwtTokenProvider.addJwtToCookie(token,res);
@@ -89,13 +93,19 @@ public class UserService {
         return ResponseEntity.ok(new UserResponseDto(user, "삭제 완료")) ;
     }
 
+    /**
+     * 로그인
+     * @param requestDto 로그인 정보 담은 Dto
+     * @param res
+     * @return 토큰 반환
+     */
     @Transactional
     public ResponseEntity<String> login(LoginRequestDto requestDto, HttpServletResponse res) {
         User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
         boolean pwdMatch = passwordEncoder.matches(requestDto.getPassword(),user.getPassword());
 
         if(pwdMatch) {
-            String token = jwtTokenProvider.createToken(requestDto.getEmail(), UserRoleEnum.USER);
+            String token = jwtTokenProvider.createToken(requestDto.getEmail(), user.getRole());
             jwtTokenProvider.addJwtToCookie(token,res);
             return ResponseEntity.ok("로그인 성공. JWT 토큰 : " + token);
         }
