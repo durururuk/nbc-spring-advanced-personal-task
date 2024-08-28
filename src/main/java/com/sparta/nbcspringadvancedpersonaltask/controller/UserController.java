@@ -3,8 +3,9 @@ package com.sparta.nbcspringadvancedpersonaltask.controller;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto) {
-        return userService.create(requestDto);
-    }
-
     @GetMapping("/id")
     public UserResponseDto readById(Long id) {
         return userService.readById(id);
@@ -35,7 +31,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public UserResponseDto deleteById(Long id) {
+    public ResponseEntity<UserResponseDto> deleteById(Long id) {
         return userService.deleteById(id);
     }
 

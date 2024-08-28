@@ -1,23 +1,35 @@
 package com.sparta.nbcspringadvancedpersonaltask.service;
 
+import com.sparta.nbcspringadvancedpersonaltask.config.PasswordEncoder;
+import com.sparta.nbcspringadvancedpersonaltask.dto.LoginRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.User;
+import com.sparta.nbcspringadvancedpersonaltask.entity.UserRoleEnum;
+import com.sparta.nbcspringadvancedpersonaltask.jwt.JwtTokenProvider;
 import com.sparta.nbcspringadvancedpersonaltask.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, @Qualifier("resourceHandlerMapping") HandlerMapping resourceHandlerMapping) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
+
 
     /**
      * 유저 등록
@@ -26,9 +38,18 @@ public class UserService {
      * @return 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto) {
+    public UserResponseDto create(UserRequestDto requestDto, HttpServletResponse res) {
+        //유저 생성 및 저장
         User user = new User(requestDto);
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
+
+        // Jwt 토큰 생성
+        String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
+
+        // Jwt를 쿠키에 포함
+        jwtTokenProvider.addJwtToCookie(token,res);
+
         return new UserResponseDto(user, "등록 성공");
     }
 
@@ -39,7 +60,7 @@ public class UserService {
      * @return 조회된 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto readById(@RequestParam Long id) {
+    public UserResponseDto readById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         return new UserResponseDto(user);
     }
@@ -62,9 +83,25 @@ public class UserService {
      * @return 삭제된 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto deleteById(@RequestParam Long id) {
+    public ResponseEntity<UserResponseDto> deleteById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         userRepository.deleteById(id);
-        return new UserResponseDto(user, "삭제 완료");
+        return ResponseEntity.ok(new UserResponseDto(user, "삭제 완료")) ;
     }
+
+    @Transactional
+    public ResponseEntity<String> login(LoginRequestDto requestDto, HttpServletResponse res) {
+        User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
+        boolean pwdMatch = passwordEncoder.matches(requestDto.getPassword(),user.getPassword());
+
+        if(pwdMatch) {
+            String token = jwtTokenProvider.createToken(requestDto.getEmail(), UserRoleEnum.USER);
+            jwtTokenProvider.addJwtToCookie(token,res);
+            return ResponseEntity.ok("로그인 성공. JWT 토큰 : " + token);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+    }
+
+
 }

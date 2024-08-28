@@ -1,5 +1,6 @@
 package com.sparta.nbcspringadvancedpersonaltask.entity;
 
+import com.sparta.nbcspringadvancedpersonaltask.config.PasswordEncoder;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,14 +21,19 @@ public class User extends Timestamped {
 
     private String username;
     private String email;
+    private String password;
 
     public User(UserRequestDto requestDto) {
         this.username = requestDto.getUsername();
         this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserTodo> UserTodoList = new ArrayList<>();
+
+
+
 
 }
 
