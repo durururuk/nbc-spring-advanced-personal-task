@@ -20,11 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
-        return userService.create(requestDto, res);
-    }
-
     @GetMapping("/id")
     public UserResponseDto readById(Long id) {
         return userService.readById(id);

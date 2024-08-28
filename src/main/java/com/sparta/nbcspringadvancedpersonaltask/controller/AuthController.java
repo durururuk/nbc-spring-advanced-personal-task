@@ -3,7 +3,6 @@ package com.sparta.nbcspringadvancedpersonaltask.controller;
 import com.sparta.nbcspringadvancedpersonaltask.dto.LoginRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
-import com.sparta.nbcspringadvancedpersonaltask.entity.UserRoleEnum;
 import com.sparta.nbcspringadvancedpersonaltask.jwt.JwtTokenProvider;
 import com.sparta.nbcspringadvancedpersonaltask.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -12,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
     private final UserService userService;
     JwtTokenProvider jwtTokenProvider;
@@ -41,6 +40,11 @@ public class AuthController {
         System.out.println("authority = " + authority);
 
         return "getJwt :" + email + ", " + authority;
+    }
+
+    @PostMapping("/regi")
+    public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+        return userService.create(requestDto, res);
     }
 
     @PostMapping("/login")
