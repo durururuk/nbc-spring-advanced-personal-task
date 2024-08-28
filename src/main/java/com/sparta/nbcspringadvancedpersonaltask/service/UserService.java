@@ -4,7 +4,10 @@ import com.sparta.nbcspringadvancedpersonaltask.config.PasswordEncoder;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.entity.User;
+import com.sparta.nbcspringadvancedpersonaltask.entity.UserRoleEnum;
+import com.sparta.nbcspringadvancedpersonaltask.jwt.JwtTokenProvider;
 import com.sparta.nbcspringadvancedpersonaltask.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +19,14 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
+
 
     /**
      * 유저 등록
@@ -30,10 +35,18 @@ public class UserService {
      * @return 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto) {
+    public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+        //유저 생성 및 저장
         User user = new User(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
+
+        // Jwt 토큰 생성
+        String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
+
+        // Jwt를 쿠키에 포함
+        jwtTokenProvider.addJwtToCookie(token,res);
+
         return new UserResponseDto(user, "등록 성공");
     }
 

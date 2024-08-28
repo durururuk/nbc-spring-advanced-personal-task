@@ -3,6 +3,7 @@ package com.sparta.nbcspringadvancedpersonaltask.controller;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserResponseDto;
 import com.sparta.nbcspringadvancedpersonaltask.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto) {
-        return userService.create(requestDto);
+    public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+        return userService.create(requestDto, res);
     }
 
     @GetMapping("/id")
