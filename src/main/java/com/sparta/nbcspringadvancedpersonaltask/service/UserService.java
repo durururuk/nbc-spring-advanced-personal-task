@@ -45,7 +45,7 @@ public class UserService {
         userRepository.save(user);
 
         // Jwt 토큰 생성
-        if (user.getRole().equals(UserRoleEnum.Authority.ADMIN)) {
+        if (user.getRole().getAuthority().equals(UserRoleEnum.Authority.ADMIN)) {
             String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.ADMIN);
         }
         String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
