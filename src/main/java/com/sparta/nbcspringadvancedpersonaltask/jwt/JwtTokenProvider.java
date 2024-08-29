@@ -64,24 +64,15 @@ public class JwtTokenProvider {
                         .compact();
     }
 
-    /**
-     * JWT를 Cookie에 저장
-     * @param token JWT 토큰
-     * @param res 응답 인터페이스
-     */
-    public void addJwtToCookie(String token, HttpServletResponse res) {
-        token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
-
-        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
-        cookie.setPath("/");
-
-        // Response 객체에 Cookie 추가
-        res.addCookie(cookie);
+    public void addJwtToHeader(String token, HttpServletResponse res) {
+        // Response 객체에 헤더 추가
+        logger.info("Adding JWT to Header: {}", token);
+        res.addHeader(AUTHORIZATION_HEADER,token);
     }
 
     /**
      * JWT 토큰 substring
-     * @param tokenValue 쿠키에 저장된 값
+     * @param tokenValue 헤더에 저장된 값
      * @return JWT 토큰만 슬라이싱해서 반환
      */
     public String substringToken(String tokenValue) {
@@ -123,20 +114,13 @@ public class JwtTokenProvider {
     }
 
     /**
-     * HttpServletRequest 에서 Cookie Value : JWT 가져오기
+     * HttpServletRequest JWT 토큰 Header 가져오기
      * @param req : httpServeltRequest
      * @return 쿠키에 저장돼있는 bearer+JWT
      */
     public String getTokenFromRequest(HttpServletRequest req) {
-        Cookie[] cookies = req.getCookies();
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8); // Encode 되어 넘어간 Value 다시 Decode
-                }
-            }
-        }
-        return null;
+        return req.getHeader(AUTHORIZATION_HEADER);
     }
 
 }
+

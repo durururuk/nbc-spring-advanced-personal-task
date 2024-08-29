@@ -51,8 +51,8 @@ public class UserService {
         String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
 
 
-        // Jwt를 쿠키에 포함
-        jwtTokenProvider.addJwtToCookie(token, res);
+        // Jwt를 헤더에 포함
+        jwtTokenProvider.addJwtToHeader(token, res);
 
         return ResponseEntity.ok(new UserResponseDto(user, "등록 성공"));
     }
@@ -107,7 +107,7 @@ public class UserService {
 
         if (pwdMatch) {
             String token = jwtTokenProvider.createToken(requestDto.getEmail(), user.getRole());
-            jwtTokenProvider.addJwtToCookie(token, res);
+            jwtTokenProvider.addJwtToHeader(token, res);
             return ResponseEntity.ok("로그인 성공. JWT 토큰 : " + token);
         }
 
