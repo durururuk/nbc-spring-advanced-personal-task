@@ -23,16 +23,22 @@ public class AuthController {
     }
 
     /**
-     *
-     * @param requestDto
-     * @param res
-     * @return
+     * 유저 등록
+     * @param requestDto 유저 등록 정보
+     * @param res 응답 인터페이스
+     * @return 등록된 유저 정보
      */
     @PostMapping("/regi")
     public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
         return userService.create(requestDto, res);
     }
 
+    /**
+     *
+     * @param requestDto 로그인 정보 (이메일, 비밀번호)
+     * @param res 응답 인터페이스
+     * @return JWT 토큰
+     */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
         return userService.login(requestDto,res);

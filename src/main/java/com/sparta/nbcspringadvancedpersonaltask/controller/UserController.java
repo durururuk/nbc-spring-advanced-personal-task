@@ -22,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping("/id")
-    public UserResponseDto readById(Long id) {
+    public ResponseEntity<UserResponseDto> readById(Long id) {
         return userService.readById(id);
     }
 
     @GetMapping
-    public List<UserResponseDto> readAll() {
+    public ResponseEntity<List<UserResponseDto>> readAll() {
         return userService.readAll();
     }
 

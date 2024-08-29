@@ -45,14 +45,14 @@ public class UserService {
         userRepository.save(user);
 
         // Jwt 토큰 생성
-        if(user.getRole().equals(UserRoleEnum.Authority.ADMIN)) {
+        if (user.getRole().equals(UserRoleEnum.Authority.ADMIN)) {
             String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.ADMIN);
         }
         String token = jwtTokenProvider.createToken(user.getEmail(), UserRoleEnum.USER);
 
 
         // Jwt를 쿠키에 포함
-        jwtTokenProvider.addJwtToCookie(token,res);
+        jwtTokenProvider.addJwtToCookie(token, res);
 
         return ResponseEntity.ok(new UserResponseDto(user, "등록 성공"));
     }
@@ -75,9 +75,9 @@ public class UserService {
      * @return 유저 전체 응답 Dto 리스트
      */
     @Transactional
-    public List<UserResponseDto> readAll() {
+    public ResponseEntity<List<UserResponseDto>> readAll() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserResponseDto::new).toList();
+        return ResponseEntity.ok(users.stream().map(UserResponseDto::new).toList());
     }
 
     /**
@@ -90,28 +90,27 @@ public class UserService {
     public ResponseEntity<UserResponseDto> deleteById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         userRepository.deleteById(id);
-        return ResponseEntity.ok(new UserResponseDto(user, "삭제 완료")) ;
+        return ResponseEntity.ok(new UserResponseDto(user, "삭제 완료"));
     }
 
     /**
      * 로그인
+     *
      * @param requestDto 로그인 정보 담은 Dto
-     * @param res
+     * @param res        응답 인터페이스
      * @return 토큰 반환
      */
     @Transactional
     public ResponseEntity<String> login(LoginRequestDto requestDto, HttpServletResponse res) {
         User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow();
-        boolean pwdMatch = passwordEncoder.matches(requestDto.getPassword(),user.getPassword());
+        boolean pwdMatch = passwordEncoder.matches(requestDto.getPassword(), user.getPassword());
 
-        if(pwdMatch) {
+        if (pwdMatch) {
             String token = jwtTokenProvider.createToken(requestDto.getEmail(), user.getRole());
-            jwtTokenProvider.addJwtToCookie(token,res);
+            jwtTokenProvider.addJwtToCookie(token, res);
             return ResponseEntity.ok("로그인 성공. JWT 토큰 : " + token);
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
     }
-
-
 }

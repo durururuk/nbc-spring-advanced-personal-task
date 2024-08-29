@@ -1,6 +1,5 @@
 package com.sparta.nbcspringadvancedpersonaltask.entity;
 
-import com.sparta.nbcspringadvancedpersonaltask.config.PasswordEncoder;
 import com.sparta.nbcspringadvancedpersonaltask.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
