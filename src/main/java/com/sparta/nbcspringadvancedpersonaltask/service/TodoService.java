@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ public class TodoService {
      * @return 일정 내용 응답 Dto
      */
     @Transactional
-    public TodoResponseDto create(TodoRequestDto requestDto) {
+    public ResponseEntity<TodoResponseDto> create(TodoRequestDto requestDto) {
         //일정 생성
         UserTodo userTodo = new UserTodo();
         Todo todo = new Todo(requestDto);
@@ -50,7 +51,7 @@ public class TodoService {
         userTodo.setUser(user);
         userTodoRepository.save(userTodo);
 
-        return new TodoResponseDto(savedTodo);
+        return ResponseEntity.ok(new TodoResponseDto(savedTodo));
     }
 
     /**
@@ -76,7 +77,7 @@ public class TodoService {
      * @return : 해당 일정 응답 Dto , 담당할 유저들 정보 응답 Dto 리스트
      */
     @Transactional
-    public TodoWithUsersResponseDto readById(Long id) {
+    public ResponseEntity<TodoWithUsersResponseDto> readById(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow();
         TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
 
@@ -89,7 +90,7 @@ public class TodoService {
                 .map(UserWithoutDateResponseDto::new)
                 .toList();
 
-        return new TodoWithUsersResponseDto(todoResponseDto, userWithoutDateResponseDtoList);
+        return ResponseEntity.ok(new TodoWithUsersResponseDto(todoResponseDto, userWithoutDateResponseDtoList));
     }
 
     /**
@@ -100,7 +101,7 @@ public class TodoService {
      * @return 수정된 일정 내용 응답 Dto
      */
     @Transactional
-    public TodoResponseDto update(TodoRequestDto requestDto, Long id) {
+    public ResponseEntity<TodoResponseDto> update(TodoRequestDto requestDto, Long id) {
         Todo foundTodo = todoRepository.findById(id).orElseThrow();
         if (requestDto.getTodoTitle() != null) {
             foundTodo.setTodoTitle(requestDto.getTodoTitle());
@@ -110,7 +111,7 @@ public class TodoService {
         }
 
         Todo savedTodo = todoRepository.save(foundTodo);
-        return new TodoResponseDto(savedTodo);
+        return ResponseEntity.ok(new TodoResponseDto(savedTodo));
     }
 
     /**
@@ -120,13 +121,13 @@ public class TodoService {
      * @return 일정 전체 조회 페이지
      */
     @Transactional
-    public Page<TodoResponseDto> readAll(Pageable pageable) {
+    public ResponseEntity<Page<TodoResponseDto>> readAll(Pageable pageable) {
         int page = (pageable != null && pageable.getPageNumber() >= 0) ? pageable.getPageNumber() : 0;
         int size = (pageable != null && pageable.getPageSize() > 0) ? pageable.getPageSize() : 10;
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
 
         Pageable sortedPageable = PageRequest.of(page, size, sort);
-        return todoRepository.findAll(sortedPageable).map(TodoResponseDto::new);
+        return ResponseEntity.ok(todoRepository.findAll(sortedPageable).map(TodoResponseDto::new));
     }
 
     /**
@@ -136,9 +137,9 @@ public class TodoService {
      * @return 삭제된 내용 응답 Dto
      */
     @Transactional
-    public TodoResponseDto delete(Long id) {
+    public ResponseEntity<TodoResponseDto> delete(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow();
         todoRepository.delete(todo);
-        return new TodoResponseDto(todo);
+        return ResponseEntity.ok(new TodoResponseDto(todo));
     }
 }

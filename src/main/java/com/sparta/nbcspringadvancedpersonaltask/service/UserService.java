@@ -38,7 +38,7 @@ public class UserService {
      * @return 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto create(UserRequestDto requestDto, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> create(UserRequestDto requestDto, HttpServletResponse res) {
         //유저 생성 및 저장
         User user = new User(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -54,7 +54,7 @@ public class UserService {
         // Jwt를 쿠키에 포함
         jwtTokenProvider.addJwtToCookie(token,res);
 
-        return new UserResponseDto(user, "등록 성공");
+        return ResponseEntity.ok(new UserResponseDto(user, "등록 성공"));
     }
 
     /**
@@ -64,9 +64,9 @@ public class UserService {
      * @return 조회된 유저 정보 응답 Dto
      */
     @Transactional
-    public UserResponseDto readById(Long id) {
+    public ResponseEntity<UserResponseDto> readById(Long id) {
         User user = userRepository.findById(id).orElseThrow();
-        return new UserResponseDto(user);
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 
     /**

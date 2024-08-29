@@ -29,7 +29,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/regi")
-    public UserResponseDto create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
         return userService.create(requestDto, res);
     }
 
