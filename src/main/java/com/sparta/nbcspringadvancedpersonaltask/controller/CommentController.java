@@ -30,7 +30,7 @@ public class CommentController {
 
     //댓글 전체 조회
     @GetMapping
-    public List<CommentResponseDto> readAllCommentByTodoId(@RequestParam Long todoId) {
+    public ResponseEntity<List<CommentResponseDto>> readAllCommentByTodoId(@RequestParam Long todoId) {
         return commentService.readAllCommentByTodoId(todoId);
     }
 
