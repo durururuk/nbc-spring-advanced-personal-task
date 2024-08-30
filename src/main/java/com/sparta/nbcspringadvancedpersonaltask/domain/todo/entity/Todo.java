@@ -24,6 +24,7 @@ public class Todo extends Timestamped {
     private Long userId;
     private String todoTitle;
     private String todoContents;
+    private String weather;
 
     public Todo(TodoRequestDto requestDto) {
         this.todoTitle = requestDto.getTodoTitle();

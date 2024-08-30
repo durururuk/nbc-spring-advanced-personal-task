@@ -10,6 +10,7 @@ import com.sparta.nbcspringadvancedpersonaltask.domain.manager.entity.UserTodo;
 import com.sparta.nbcspringadvancedpersonaltask.domain.todo.repository.TodoRepository;
 import com.sparta.nbcspringadvancedpersonaltask.domain.user.repository.UserRepository;
 import com.sparta.nbcspringadvancedpersonaltask.domain.manager.repository.UserTodoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,16 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
     private final UserTodoRepository userTodoRepository;
-
-    public TodoService(TodoRepository todoRepository, UserRepository userRepository, UserTodoRepository userTodoRepository) {
-        this.todoRepository = todoRepository;
-        this.userRepository = userRepository;
-        this.userTodoRepository = userTodoRepository;
-    }
+    private final TodoWeatherService todoWeatherService;
 
     /**
      * 일정 생성
@@ -39,13 +36,16 @@ public class TodoService {
      * @return 일정 내용 응답 Dto
      */
     @Transactional
-    public ResponseEntity<TodoResponseDto> create(TodoRequestDto requestDto) {
+    public ResponseEntity<TodoResponseDto> create(TodoRequestDto requestDto, Long userId) {
         //일정 생성
-        UserTodo userTodo = new UserTodo();
+
         Todo todo = new Todo(requestDto);
+        todo.setUserId(userId);
+        todo.setWeather(todoWeatherService.getTodayWeather());
         Todo savedTodo = todoRepository.save(todo);
 
         //조인테이블에 등록
+        UserTodo userTodo = new UserTodo();
         User user = userRepository.findById(todo.getUserId()).orElseThrow();
         userTodo.setTodo(todo);
         userTodo.setUser(user);

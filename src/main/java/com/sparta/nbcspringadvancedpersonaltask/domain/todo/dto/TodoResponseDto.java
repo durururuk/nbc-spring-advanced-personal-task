@@ -12,6 +12,7 @@ public class TodoResponseDto {
     private final String todoContents;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
+    private final String weather;
 
     public TodoResponseDto(Todo todo) {
         this.todoTitle = todo.getTodoTitle();
@@ -19,5 +20,6 @@ public class TodoResponseDto {
         this.createdAt = todo.getCreatedAt();
         this.modifiedAt = todo.getModifiedAt();
         this.id = todo.getId();
+        this.weather = todo.getWeather();
     }
 }

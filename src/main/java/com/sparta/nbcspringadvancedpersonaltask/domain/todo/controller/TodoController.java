@@ -22,8 +22,8 @@ public class TodoController {
 
     //일정 등록
     @PostMapping
-    public ResponseEntity<TodoResponseDto> create(@RequestBody TodoRequestDto requestDto) {
-        return todoService.create(requestDto);
+    public ResponseEntity<TodoResponseDto> create(@RequestBody TodoRequestDto requestDto, @RequestParam Long userId) {
+        return todoService.create(requestDto, userId);
     }
 
     //일정 담당자 추가
